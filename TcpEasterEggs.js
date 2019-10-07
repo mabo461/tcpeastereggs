@@ -11,7 +11,7 @@
 })(this, function () {
     var tcpEasterEggs = {};
 
-    tcpEasterEggs.version = '1.0.0';
+    tcpEasterEggs.version = '1.0.1';
 
     var Settings = tcpEasterEggs.settings = {
         ghostCount: 85,
