@@ -11,7 +11,7 @@
 })(this, function () {
     var tcpEasterEggs = {};
 
-    tcpEasterEggs.version = '1.0.2';
+    tcpEasterEggs.version = '1.0.3';
 
     var Settings = tcpEasterEggs.settings = {
         ghostCount: 85,
@@ -23,7 +23,7 @@
         friendHeight: 250,
         friendLifeSpan: 6,
         friendPctVisible: 0.75,
-        enableIdleFriends: true,
+        idleFriendsEnabledChance: 25,
         showFriendIdleTimeout: 20,
         showFriendActiveInterval: 2.5,
         banishFriendsOnActivity: true
@@ -278,11 +278,9 @@
         //
         // Idle timeout easter egg!
         (function () {
-            if (!Settings.enableIdleFriends) return;
-
             //
-            // This only gets enabled on 10% of page loads.
-            if (RandomInt(1, 10) !== 1) return;
+            // See if the idle friends will be enabled on this page
+            if (RandomInt(1, 100) > Settings.idleFriendsEnabledChance) return;
 
             console.log("Boo.");
 
