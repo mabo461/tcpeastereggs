@@ -11,7 +11,7 @@
 })(this, function () {
     var tcpEasterEggs = {};
 
-    tcpEasterEggs.version = '1.0.1';
+    tcpEasterEggs.version = '1.0.2';
 
     var Settings = tcpEasterEggs.settings = {
         ghostCount: 85,
@@ -22,7 +22,11 @@
         ghostMaxLifeSpan: 10,
         friendHeight: 250,
         friendLifeSpan: 6,
-        friendPctVisible: 0.75
+        friendPctVisible: 0.75,
+        enableIdleFriends: true,
+        showFriendIdleTimeout: 20,
+        showFriendActiveInterval: 2.5,
+        banishFriendsOnActivity: true
     };
 
     var friends = [
@@ -58,6 +62,8 @@
         }
     };
 
+    var displayedFriends = [];
+
     tcpEasterEggs.popupFriend = function () {
         var friendHeight = Settings.friendHeight;
         var friend = createFriend(friendHeight);
@@ -90,9 +96,9 @@
 
         if (side === 1) { // top
             startingY = minY - friendHeight;
-            endingY = friendHeight * pctVisible - friendHeight;
+            endingY = startingY + friendHeight * pctVisible;
             startingX = endingX = rX;
-            
+
             $el.css('transform', "rotate(180deg)");
         }
         else if (side === 2) { // right
@@ -111,11 +117,13 @@
             startingY = endingY = rY;
             startingX = minX - friendHeight;
             endingX = friendHeight * pctVisible - friendHeight;
-            
+
             $el.css('transform', "rotate(90deg)");
         }
 
         $el.css('top', startingY).css('left', startingX);
+
+        displayedFriends.push($el);
 
         $el.animate({ top: endingY, left: endingX }, friendDuration / 2, 'swing', function () {
             $el.animate({ top: endingY, left: endingX }, 1500, 'swing', function () {
@@ -125,6 +133,15 @@
             });
         });
     };
+
+    //
+    // Hide any visible friends on the screen
+    function banishFriends() {
+        displayedFriends.forEach(function (el) {
+            el.animate({ opacity: 0 }, 100);
+        });
+        displayedFriends = [];
+    }
 
     /*************************************
      * Ghost/Friend Spawn Helper functions
@@ -248,15 +265,46 @@
      *************************************/
 
 
-    //
-    // Add the hook for keyboard input
     if (window.addEventListener) {
+        //
+        // Add the hook for keyboard input
         var s = 0, k = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
         window.addEventListener("keydown", function (e) {
             if (e.keyCode === k[s]) s++;
             else s = 0;
             if (s === k.length) { tcpEasterEggs.spawnGhosts(); s = 0; }
         }, true);
+
+        //
+        // Idle timeout easter egg!
+        (function () {
+            if (!Settings.enableIdleFriends) return;
+
+            //
+            // This only gets enabled on 10% of page loads.
+            if (RandomInt(1, 10) !== 1) return;
+
+            console.log("Boo.");
+
+            var time;
+            window.onload = resetTimer;
+            window.onmousemove = resetTimer;
+            window.onkeypress = resetTimer;
+
+            function resetTimer() {
+                if (Settings.banishFriendsOnActivity)
+                    banishFriends();
+
+                clearTimeout(time);
+                time = setTimeout(timerTrigger, Settings.showFriendIdleTimeout * 1000);
+            }
+
+            function timerTrigger() {
+                tcpEasterEggs.popupFriend();
+                time = setTimeout(timerTrigger, Settings.showFriendActiveInterval * 1000);
+            }
+
+        })();
     }
 
     return tcpEasterEggs;
