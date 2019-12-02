@@ -24,8 +24,8 @@
         friendLifeSpan: 6,
         friendPctVisible: 0.75,
         idleFriendsEnabledChance: 25,
-        showFriendIdleTimeout: 20,
-        showFriendActiveInterval: 2.5,
+        showFriendIdleTimeout: 30,
+        showFriendActiveInterval: 5,
         banishFriendsOnActivity: true
     };
 
