@@ -23,7 +23,7 @@
         friendHeight: 250,
         friendLifeSpan: 6,
         friendPctVisible: 0.75,
-        idleFriendsEnabledChance: 25,
+        idleFriendsEnabledChance: 15,
         showFriendIdleTimeout: 30,
         showFriendActiveInterval: 5,
         banishFriendsOnActivity: true
