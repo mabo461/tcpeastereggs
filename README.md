@@ -18,8 +18,8 @@
  - **ghostMaxLifeSpan** (Default 10) : Maximum time (in seconds) the ghost will be displayed.
  - **friendHeight** (Default 250) : Height (in pixels) of the friend.
  - **friendLifeSpan** (Default 6) : Time (in seconds) the friend will be displayed.
- - **friendPctVisible** (Default 0.75) Percent of the friend to display.
- - **idleFriendsEnabledChance** (Default 15) Percent of pages load that the idle display will even be activated.
+ - **friendPctVisible** (Default 75) Percent of the friend to display.
+ - **idleFriendsEnabledChance** (Default 15) Percent of page loads that the idle display will have a chance to be activated.
  - **showFriendIdleTimeout** (Default 30) Number of seconds of idle time before friend will popup.
  - **showFriendActiveInterval** (Default 5) Number of seconds between friend popup while activated.
  - **banishFriendsOnActivity** (Default true) Hide all active friend popups on user activity.

@@ -22,7 +22,7 @@
         ghostMaxLifeSpan: 10,
         friendHeight: 250,
         friendLifeSpan: 6,
-        friendPctVisible: 0.75,
+        friendPctVisible: 75,
         idleFriendsEnabledChance: 15,
         showFriendIdleTimeout: 30,
         showFriendActiveInterval: 5,
@@ -92,7 +92,7 @@
         var startingX;
         var endingX;
 
-        var pctVisible = Settings.friendPctVisible;
+        var pctVisible = Settings.friendPctVisible / 100;
 
         if (side === 1) { // top
             startingY = minY - friendHeight;
