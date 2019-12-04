@@ -11,7 +11,7 @@
 })(this, function () {
     var tcpEasterEggs = {};
 
-    tcpEasterEggs.version = '1.0.3';
+    tcpEasterEggs.version = '1.0.4';
 
     var Settings = tcpEasterEggs.settings = {
         ghostCount: 85,
@@ -23,9 +23,9 @@
         friendHeight: 250,
         friendLifeSpan: 6,
         friendPctVisible: 75,
-        idleFriendsEnabledChance: 15,
-        showFriendIdleTimeout: 30,
-        showFriendActiveInterval: 5,
+        idleFriendsEnabledChance: 10,
+        showFriendIdleTimeout: 60,
+        showFriendActiveInterval: 10,
         banishFriendsOnActivity: true
     };
 
@@ -40,6 +40,7 @@
             value = options[key];
             if (value !== undefined && options.hasOwnProperty(key)) Settings[key] = value;
         }
+
         return this;
     };
 
@@ -134,11 +135,40 @@
         });
     };
 
+    tcpEasterEggs.initIdleFriends = function () {
+        var timer;
+
+        clearTimeout(timer);
+
+        //
+        // See if the idle friends will be enabled on this page
+        if (RandomInt(1, 100) > Settings.idleFriendsEnabledChance) return;
+
+        console.log("Boo.");
+
+        window.onload = resetTimer;
+        window.onmousemove = resetTimer;
+        window.onkeypress = resetTimer;
+
+        function resetTimer() {
+            if (Settings.banishFriendsOnActivity)
+                banishFriends();
+
+            clearTimeout(timer);
+            timer = setTimeout(timerTrigger, Settings.showFriendIdleTimeout * 1000);
+        }
+
+        function timerTrigger() {
+            tcpEasterEggs.popupFriend();
+            timer = setTimeout(timerTrigger, Settings.showFriendActiveInterval * 1000);
+        }
+    };
+
     //
     // Hide any visible friends on the screen
     function banishFriends() {
         displayedFriends.forEach(function (el) {
-            el.animate({ opacity: 0 }, 100);
+            el.hide();
         });
         displayedFriends = [];
     }
@@ -264,7 +294,6 @@
      * End Helper functions
      *************************************/
 
-
     if (window.addEventListener) {
         //
         // Add the hook for keyboard input
@@ -274,35 +303,6 @@
             else s = 0;
             if (s === k.length) { tcpEasterEggs.spawnGhosts(); s = 0; }
         }, true);
-
-        //
-        // Idle timeout easter egg!
-        (function () {
-            //
-            // See if the idle friends will be enabled on this page
-            if (RandomInt(1, 100) > Settings.idleFriendsEnabledChance) return;
-
-            console.log("Boo.");
-
-            var time;
-            window.onload = resetTimer;
-            window.onmousemove = resetTimer;
-            window.onkeypress = resetTimer;
-
-            function resetTimer() {
-                if (Settings.banishFriendsOnActivity)
-                    banishFriends();
-
-                clearTimeout(time);
-                time = setTimeout(timerTrigger, Settings.showFriendIdleTimeout * 1000);
-            }
-
-            function timerTrigger() {
-                tcpEasterEggs.popupFriend();
-                time = setTimeout(timerTrigger, Settings.showFriendActiveInterval * 1000);
-            }
-
-        })();
     }
 
     return tcpEasterEggs;

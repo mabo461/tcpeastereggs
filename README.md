@@ -19,9 +19,9 @@
  - **friendHeight** (Default 250) : Height (in pixels) of the friend.
  - **friendLifeSpan** (Default 6) : Time (in seconds) the friend will be displayed.
  - **friendPctVisible** (Default 75) Percent of the friend to display.
- - **idleFriendsEnabledChance** (Default 15) Percent of page loads that the idle display will have a chance to be activated.
- - **showFriendIdleTimeout** (Default 30) Number of seconds of idle time before friend will popup.
- - **showFriendActiveInterval** (Default 5) Number of seconds between friend popup while activated.
+ - **idleFriendsEnabledChance** (Default 10) Percent of page loads that the idle display will have a chance to be activated.
+ - **showFriendIdleTimeout** (Default 60) Number of seconds of idle time before friend will popup.
+ - **showFriendActiveInterval** (Default 10) Number of seconds between friend popup while activated.
  - **banishFriendsOnActivity** (Default true) Hide all active friend popups on user activity.
 
 
@@ -38,4 +38,8 @@
 *Manually trigger a friend to popup:*
 
     tcpEasterEggs.popupFriend();
+	
+*Enable the chance for idle popup friends*
+
+	tcpEasterEggs.initIdleFriends();
 
