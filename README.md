@@ -23,7 +23,7 @@
  - **showFriendIdleTimeout** (Default 60) Number of seconds of idle time before friend will popup.
  - **showFriendActiveInterval** (Default 10) Number of seconds between friend popup while activated.
  - **banishFriendsOnActivity** (Default true) Hide all active friend popups on user activity.
-
+ - **maxIdleFriendsDisplay** (Default 100) Maximum number of idle friends to display on the screen at one time.
 
 **Usage:**
 

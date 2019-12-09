@@ -11,7 +11,7 @@
 })(this, function () {
     var tcpEasterEggs = {};
 
-    tcpEasterEggs.version = '1.0.4';
+    tcpEasterEggs.version = '1.0.5';
 
     var Settings = tcpEasterEggs.settings = {
         ghostCount: 85,
@@ -26,7 +26,8 @@
         idleFriendsEnabledChance: 10,
         showFriendIdleTimeout: 60,
         showFriendActiveInterval: 10,
-        banishFriendsOnActivity: true
+        banishFriendsOnActivity: true,
+        maxIdleFriendsDisplay: 100
     };
 
     var friends = [
@@ -66,6 +67,10 @@
     var displayedFriends = [];
 
     tcpEasterEggs.popupFriend = function () {
+
+        if (displayedFriends.length >= Settings.maxIdleFriendsDisplay)
+            return;
+
         var friendHeight = Settings.friendHeight;
         var friend = createFriend(friendHeight);
         var $el = $(friend);
@@ -130,6 +135,8 @@
             $el.animate({ top: endingY, left: endingX }, 1500, 'swing', function () {
                 $el.animate({ top: startingY, left: startingX }, friendDuration / 2, 'swing', function () {
                     document.body.removeChild(friend);
+                    var idx = displayedFriends.indexOf($el);
+                    if (idx >= 0) displayedFriends.splice(idx, 1);
                 });
             });
         });
@@ -149,6 +156,7 @@
         window.onload = resetTimer;
         window.onmousemove = resetTimer;
         window.onkeypress = resetTimer;
+        window.onscroll = resetTimer;
 
         function resetTimer() {
             if (Settings.banishFriendsOnActivity)
