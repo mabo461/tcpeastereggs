@@ -27,7 +27,8 @@
         showFriendIdleTimeout: 60,
         showFriendActiveInterval: 10,
         banishFriendsOnActivity: true,
-        maxIdleFriendsDisplay: 100
+        maxIdleFriendsDisplay: 100,
+        analyticsId: ''
     };
 
     var friends = [
@@ -62,6 +63,8 @@
                 spawnGhost();
             }, RandomInt(0, spawnTimespan * 1000));
         }
+
+        reportAnalytics('ghostsSpawn');
     };
 
     var displayedFriends = [];
@@ -163,12 +166,19 @@
                 banishFriends();
 
             clearTimeout(timer);
-            timer = setTimeout(timerTrigger, Settings.showFriendIdleTimeout * 1000);
+            timer = setTimeout(initialTrigger, Settings.showFriendIdleTimeout * 1000);
         }
 
-        function timerTrigger() {
+        function initialTrigger() {
+            reportAnalytics('idleFriends');
+
             tcpEasterEggs.popupFriend();
-            timer = setTimeout(timerTrigger, Settings.showFriendActiveInterval * 1000);
+            timer = setTimeout(activeIdleTrigger, Settings.showFriendActiveInterval * 1000);
+        }
+
+        function activeIdleTrigger() {
+            tcpEasterEggs.popupFriend();
+            timer = setTimeout(activeIdleTrigger, Settings.showFriendActiveInterval * 1000);
         }
     };
 
@@ -179,6 +189,12 @@
             el.hide();
         });
         displayedFriends = [];
+    }
+
+    function reportAnalytics(category) {
+        if (typeof gtag === "function" && Settings.analyticsId) {
+            gtag('event', 'TcpEasterEggs', { event_category: category, event_label: '' });
+        }
     }
 
     /*************************************
