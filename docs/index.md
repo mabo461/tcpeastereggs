@@ -1,5 +1,12 @@
 # Tcp Easter Eggs
 
+<script src="https://cdn.jsdelivr.net/gh/mabo461/tcpeastereggs@master/TcpEasterEggs.js"></script>
+
+**Examples:**
+
+<button onclick="tcpEasterEggs.spawnGhosts()">Spawn Ghosts</button>
+
+<button onclick="tcpEasterEggs.popupFriend()">Popup Friend</button>
 
 **Installation:**
 
