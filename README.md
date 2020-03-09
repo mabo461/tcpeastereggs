@@ -47,6 +47,6 @@
 
 **Examples:**
 
-<button onclick="function() { tcpEasterEggs.spawnGhosts(); }">Spawn Ghosts</button>
+<button onclick="tcpEasterEggs.spawnGhosts()">Spawn Ghosts</button>
 
-<button onclick="function() { tcpEasterEggs.popupFriend(); }">Popup Friend</button>
+<button onclick="tcpEasterEggs.popupFriend()">Popup Friend</button>
