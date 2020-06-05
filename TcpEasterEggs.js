@@ -1,5 +1,9 @@
+/**
+ * Tcp EasterEggs Mattb
+ */
 (function (root, factory) {
-    if (!window.jQuery)
+    // Need jQuery or VelocityJS for animation
+    if (!window.jQuery && !window.Velocity)
         return;
     if (typeof define === 'function' && define.amd) {
         define(factory);
@@ -11,7 +15,7 @@
 })(this, function () {
     var tcpEasterEggs = {};
 
-    tcpEasterEggs.version = '1.0.7';
+    tcpEasterEggs.version = '1.0.8';
 
     var Settings = tcpEasterEggs.settings = {
         ghostCount: 85,
@@ -76,13 +80,12 @@
 
         var friendHeight = Settings.friendHeight;
         var friend = createFriend(friendHeight);
-        var $el = $(friend);
 
         var friendDuration = Settings.friendLifeSpan * 1000;
 
-        $el.show();
+        friend.style.display = 'block';
 
-        $el.css('opacity', '1');
+        friend.style.opacity = 1;
 
         var side = RandomInt(1, 4);
 
@@ -108,14 +111,14 @@
             endingY = startingY + friendHeight * pctVisible;
             startingX = endingX = rX;
 
-            $el.css('transform', "rotate(180deg)");
+            friend.style.transform = "rotate(180deg)";
         }
         else if (side === 2) { // right
             startingY = endingY = rY;
             startingX = maxX;
             endingX = maxX - friendHeight * pctVisible;
 
-            $el.css('transform', "rotate(270deg)");
+            friend.style.transform = "rotate(270deg)";
         }
         else if (side === 3) { // bottom
             startingY = maxY;
@@ -127,22 +130,36 @@
             startingX = minX - friendHeight;
             endingX = friendHeight * pctVisible - friendHeight;
 
-            $el.css('transform', "rotate(90deg)");
+            friend.style.transform = "rotate(90deg)";
         }
 
-        $el.css('top', startingY).css('left', startingX);
+        friend.style.top = startingY + 'px';
+        friend.style.left = startingX + 'px';
 
-        displayedFriends.push($el);
+        displayedFriends.push(friend);
 
-        $el.animate({ top: endingY, left: endingX }, friendDuration / 2, 'swing', function () {
-            $el.animate({ top: endingY, left: endingX }, 1500, 'swing', function () {
-                $el.animate({ top: startingY, left: startingX }, friendDuration / 2, 'swing', function () {
-                    document.body.removeChild(friend);
-                    var idx = displayedFriends.indexOf($el);
-                    if (idx >= 0) displayedFriends.splice(idx, 1);
+        //
+        // Called when the animation finishes.
+        var completeFunc = function () {
+            document.body.removeChild(friend);
+            var idx = displayedFriends.indexOf(friend);
+            if (idx >= 0) displayedFriends.splice(idx, 1);
+        };
+
+        if (window.Velocity) {
+            Velocity(friend, { top: endingY, left: endingX }, friendDuration / 2, 'swing', function () {
+                Velocity(friend, { top: endingY, left: endingX }, 1500, 'swing', function () {
+                    Velocity(friend, { top: startingY, left: startingX }, friendDuration / 2, 'swing', completeFunc);
                 });
             });
-        });
+        }
+        else if (window.jQuery) {
+            $(friend).animate({ top: endingY, left: endingX }, friendDuration / 2, 'swing', function () {
+                $(friend).animate({ top: endingY, left: endingX }, 1500, 'swing', function () {
+                    $(friend).animate({ top: startingY, left: startingX }, friendDuration / 2, 'swing', completeFunc);
+                });
+            });
+        }
     };
 
     tcpEasterEggs.initIdleFriends = function () {
@@ -154,7 +171,7 @@
         // See if the idle friends will be enabled on this page
         if (RandomInt(1, 100) > Settings.idleFriendsEnabledChance) return;
 
-		var ghostascii = "                                                                         \n\
+        var ghostascii = "                                                                         \n\
                                     ......................                                         \n\
                                ...............................                                     \n\
                             ....         .........................                                 \n\
@@ -235,7 +252,7 @@ Boo.";
     // Hide any visible friends on the screen
     function banishFriends() {
         displayedFriends.forEach(function (el) {
-            el.hide();
+            el.style.display = 'none';
         });
         displayedFriends = [];
     }
@@ -251,9 +268,8 @@ Boo.";
      *************************************/
     function spawnGhost() {
         var ghost = createGhost();
-        var $el = $(ghost);
-
-        $el.show();
+        
+        ghost.style.display = 'block';
 
         var c1 = RandomCoordinate();
         var c2 = RandomCoordinate();
@@ -272,14 +288,24 @@ Boo.";
 
         var duration = RandomInt(minLifeSpan, maxLifeSpan);
 
-        $el.css('opacity', '0');
-        $el.css('top', y1).css('left', x1);
+        ghost.style.opacity = 0;
+        ghost.style.top = y1 + 'px';
+        ghost.style.left = x1 + 'px';
 
-        $el.animate({ opacity: '1', top: my, left: mx }, duration / 2, 'linear', function () {
-            $el.animate({ opacity: '0', top: y2, left: x2 }, duration / 2, 'linear', function () {
-                document.body.removeChild(ghost);
+        if (window.Velocity) {
+            Velocity(ghost, { opacity: '1', top: my, left: mx }, duration / 2, 'linear', function () {
+                Velocity(ghost, { opacity: '0', top: y2, left: x2 }, duration / 2, 'linear', function () {
+                    document.body.removeChild(ghost);
+                });
             });
-        });
+        }
+        else if (window.jQuery) {
+            $(ghost).animate({ opacity: '1', top: my, left: mx }, duration / 2, 'linear', function () {
+                $(ghost).animate({ opacity: '0', top: y2, left: x2 }, duration / 2, 'linear', function () {
+                    document.body.removeChild(ghost);
+                });
+            });
+        }
     }
 
     function createGhost() {
