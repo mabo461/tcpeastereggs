@@ -3,8 +3,10 @@
  */
 (function (root, factory) {
     // Need jQuery or VelocityJS for animation
-    if (!window.jQuery && !window.Velocity)
+    if (!window.jQuery && !window.Velocity) {
+		console.log("TcpEasterEggs unable to load, jQuery or VelocityJS not found.");
         return;
+	}
     if (typeof define === 'function' && define.amd) {
         define(factory);
     } else if (typeof exports === 'object') {
@@ -22,7 +24,7 @@
         ghostSpawnDuration: 15,
         ghostMinHeight: 75,
         ghostMaxHeight: 350,
-        ghostMinLifeSpan: .5,
+        ghostMinLifeSpan: 0.5,
         ghostMaxLifeSpan: 10,
         friendHeight: 250,
         friendLifeSpan: 6,
